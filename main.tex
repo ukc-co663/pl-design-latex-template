@@ -1,0 +1,242 @@
+\documentclass[11pt]{article}
+\usepackage[top=2cm,bottom=2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+% 
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ifthen}
+\usepackage{mathpartir}
+\usepackage{mathtools}
+\input{macros}
+% 
+\begin{document}
+
+\title{CO663 \LaTeX\ template}
+
+\date{\vspace{-5ex}}
+\maketitle
+
+% \pagenumbering{gobble}
+
+\newcommand{\answerbox}[1]{\framebox{\parbox[c][#1]{\textwidth}{
+      \color{white}{h}% 
+    }}}
+
+
+
+\section{Syntax and typing rules (for language $\lggeE$)}
+
+
+\subsection{Syntax}
+
+There is \LaTeX\ macro for each construct, see the sources of the
+table below.
+
+  \[
+  \begin{array}{llclll}
+    \TYPES & \tau & \Coloneqq & \enum{}  & \enum{} & \text{numbers}
+    \\
+           &&& \estr{} & \estr{} & \text{strings}
+    \\
+    \\ 
+    % 
+    \EXPS & e & \Coloneqq  & \var{x} & \var{x} & \text{variable}
+    \\
+           &&& \enum{n} & n & \text{numeral}
+    \\
+           &&& \estr{s} & \litstr{s} & \text{literal}
+    \\
+           &&& \eplus{e_1}{e_2} & e_1 {+} e_2 & \text{addition}
+    \\
+           &&& \etimes{e_1}{e_2} & e_1 {*} e_2 & \text{multiplication}
+    \\
+           &&& \ecat{e_1}{e_2} & e_1 \concat e_2 & \text{concatenate}
+    \\
+           &&& \elen{e} & \lvert e \rvert & \text{length}
+    \\
+           &&& \elet{e_1}{x}{e_2} & \clet{e_1}{x}{e_2} & \text{definition}
+  \end{array}
+  \]
+\subsection{Typing rules}
+
+
+The macro for typing judgement is called \texttt{tyjudge}, it takes
+three arguments: the environment $\Gamma$, the expression being typed
+$e$, and its type $\tau$. 
+%
+The macro to type-set typing rules (and trees) is called
+\texttt{tyrule}, it also takes three arguments: the name of the rule,
+the premises (separated by $\backslash\backslash$ or
+$\backslash$\texttt{and}), and the conclusion.
+
+  \[
+  \tyrule
+  {\etyrulename{var}}
+  {\,}
+  {\tyjudge{\Gamma_1, \var{x}: \tau, \Gamma_2}{\var{x}}{\tau} }
+  \]
+  \[
+  \tyrule
+  {\etyrulename{str}}
+  {\,}
+  {\tyjudge{\Gamma}{\estr{s}}{\estr{}}}
+  \qquad\qquad\qquad
+  \tyrule
+  {\etyrulename{num}}
+  {\,}
+  {\tyjudge{\Gamma}{\enum{n}}{\enum{}}}
+  % \end{array}
+  \]
+  \[
+  \tyrule
+  {\etyrulename{plus}}
+  {
+    \tyjudge{\Gamma}{e_1}{\enum{}}
+    \and
+    \tyjudge{\Gamma}{e_2}{\enum{}}
+  }
+  {\tyjudge{\Gamma}{\eplus{e_1}{e_2}}{\enum{}}}
+  \qquad\qquad\qquad
+  \tyrule
+  {\etyrulename{times}}
+  {
+    \tyjudge{\Gamma}{e_1}{\enum{}}
+    \and
+    \tyjudge{\Gamma}{e_2}{\enum{}}
+  }
+  {\tyjudge{\Gamma}{\etimes{e_1}{e_2}}{\enum{}}}
+  % 
+  \]
+  \[
+  \tyrule
+  {\etyrulename{cat}}
+  {
+    \tyjudge{\Gamma}{e_1}{\estr{}}
+    \and
+    \tyjudge{\Gamma}{e_2}{\estr{}}
+  }
+  {\tyjudge{\Gamma}{\ecat{e_1}{e_2}}{\estr{}}}
+  \qquad\qquad\qquad
+  \tyrule
+  {\etyrulename{len}}
+  {
+    \tyjudge{\Gamma}{e}{\estr{}}
+  }
+  {\tyjudge{\Gamma}{\elen{e}}{\enum{}}}
+  \]
+  \[
+  \tyrule
+  {\etyrulename{let}}
+  {
+    \tyjudge{\Gamma}{e_1}{\tau_1}
+    \and
+    \tyjudge{\Gamma, \var{x} : \tau_1 }{e_2}{\tau}
+  }
+  {\tyjudge{\Gamma}{\elet{e_1}{x}{e_2}}{\tau}}
+  \]
+
+\section{Typing derivation}
+
+Type-setting the typing derivation of
+$\elet{\enum{42}}{z}{\eplus{\var{z}}{1}}$ (which has type $\enum{}$):
+
+
+
+  
+  {\small
+  \[
+  \tyrule{{r1}}
+  {
+    \tyrule{{r2}}
+    {\,}
+    {
+      \tyjudge{\emptyset}
+      {\enum{42}}
+      {\enum{}}
+    }
+    \\
+    \qquad   \qquad
+    \tyrule{{r3}}
+    {
+      \tyrule{{r2}}
+      {\,}
+      {
+        \tyjudge{\var{z} : \enum{}}
+        {\var{z}}
+        {\enum{}}
+      }
+      \\
+      \qquad   \qquad
+      \tyrule{{r4}}
+      {\,}
+      {
+        \tyjudge{\var{z} : \enum{}}
+        {\enum{1}}
+        {\enum{}}
+      }
+    }
+    { 
+      \tyjudge{\var{z} : \enum{}}
+      {\eplus{\var{z}}{\enum{1}}}
+      {\enum{}}
+    }
+  }
+  {
+    \tyjudge{\emptyset}
+    {\elet{\enum{42}}{z}{\eplus{\var{z}}{\enum{1}}}}
+    {\enum{}}
+  }
+  \]
+}
+
+
+\section{Evaluation}
+
+The macro of evaluation steps is called \texttt{jtrans}, it takes two
+arguments: the initial expression and its result.
+% 
+The macro to typeset evaluation rules and trees is called
+\texttt{semrule}, it works like \texttt{tyrule}.
+%
+To evaluate $\elet{\enum{42}}{z}{\eplus{\var{z}}{1}}$, we proceed in
+several steps:
+
+\begin{enumerate}
+\item First apply the rule for \texttt{let}:
+  \[
+  \semrule
+  {r5}
+  {\,}
+  {
+    \jtrans
+    {\elet{\enum{42}}{z}{\eplus{\var{z}}{\enum{1}}}}
+    {
+      {\eplus{\enum{42}}{\enum{1}}}
+    }
+  }
+  \]
+\item Then we apply the rule for \texttt{plus}:
+  \[
+  \semrule
+  {r6}
+  {\,}
+  {\jtrans
+    {\eplus{\enum{42}}{\enum{1}}}
+    {\enum{43}}
+  }
+  \]
+\end{enumerate}
+
+
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

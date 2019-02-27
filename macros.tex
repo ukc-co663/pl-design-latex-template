@@ -1,0 +1,269 @@
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+\definecolor{beige}{rgb}{0.96, 0.96, 0.86}
+\definecolor{cosmiclatte}{rgb}{1.0, 0.97, 0.91}
+\definecolor{cream}{rgb}{1.0, 0.99, 0.82}
+\definecolor{ggreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{rred}{rgb}{1.0, 0.13, 0.32}
+\definecolor{bblue}{rgb}{0.0, 0.5, 1.0}
+\definecolor{upmaroon}{rgb}{0.0, 0.2, 0.67}
+
+\renewcommand{\emph}[1]{\textbf{#1}}
+
+\DeclareMathOperator{\defi}{\triangleq}
+
+\DeclareMathOperator{\concat}{\text{\texttt{++}}}
+
+\newcommand{\menquote}[1]{{\text{``} #1 \text{''}}} 
+
+
+\newcommand{\kw}[1]{\mathtt{#1}} 
+\newcommand{\var}[1]{{\color{bblue}#1}}
+\newcommand{\tvar}[1]{{\color{upmaroon}#1}}
+
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\bnfsep}{\; | \;}
+\newcommand{\qst}{\, : \,}
+\newcommand{\msubs}[3]{#1[#2 /{#3}]}
+\newcommand{\subs}[3]{\msubs{#1}{#2}{\var{#3}}}
+\newcommand{\tsubs}[3]{\msubs{#1}{#2}{\tvar{#3}}}
+
+
+\newcommand{\dom}[1]{\mathit{dom}(#1)}
+\newcommand{\QUAL}{{\mathsf{Qua}}}
+\newcommand{\TYPES}{\tvar{\mathsf{Typ}}}
+\newcommand{\PTYPES}{{\mathsf{PreTyp}}}
+\newcommand{\EXPS}{\var{\mathsf{Exp}}}
+\newcommand{\AEXPS}{\mathsf{AExp}}
+\newcommand{\BEXPS}{\mathsf{BExp}}
+\newcommand{\STMTS}{\mathsf{Stmt}}
+\newcommand{\VARS}{\mathcal{V}}
+
+
+\newcommand{\lgge}[1]{\textbf{#1}}
+%
+\newcommand{\lggeE}{\lgge{E}}
+\newcommand{\lggeEF}{\lgge{EF}}
+\newcommand{\lggeT}{\lgge{T}}
+\newcommand{\lggeW}{\lgge{W}}
+\newcommand{\lggeF}{\lgge{F}}
+\newcommand{\lggeL}{\lgge{L}}
+\newcommand{\lggeX}{\lgge{EX}}
+%
+
+
+
+\newcommand{\binop}[3]{\kw{#1}(#2; #3)}
+\newcommand{\unop}[2]{\kw{#1}(#2)}
+
+
+\newcommand{\litstr}[1]{\menquote{#1}}
+
+%%%% LANGUAGE E
+\newcommand{\enum}[1]{\kw{num}\ifthenelse{\equal{#1}{}}{}{[#1]}}
+\newcommand{\estr}[1]{\kw{str}\ifthenelse{\equal{#1}{}}{}{[#1]}}
+\newcommand{\ebool}[1]{\kw{bool}\ifthenelse{\equal{#1}{}}{}{[#1]}}
+\newcommand{\elbool}[2]{\kw{bool}_{#2}\ifthenelse{\equal{#1}{}}{}{[#1]}}
+\newcommand{\ktrue}{\kw{true}}
+\newcommand{\kfalse}{\kw{false}}
+
+
+\newcommand{\eplus}[2]{\binop{plus}{#1}{#2}}
+\newcommand{\etimes}[2]{\binop{times}{#1}{#2}}
+\newcommand{\ecat}[2]{\binop{cat}{#1}{#2}}
+\newcommand{\elen}[1]{\unop{len}{#1}}
+\newcommand{\elet}[3]{\kw{let}(#1; \var{#2} . \ #3)}
+\newcommand{\ediv}[2]{\binop{div}{#1}{#2}}
+\newcommand{\eerror}{\kw{{\color{rred} error}}}
+\newcommand{\eshow}[1]{\kw{show}(#1)}
+
+\newcommand{\klet}{\kw{let}}
+\newcommand{\kbe}{\kw{be}}
+\newcommand{\kin}{\kw{in}}
+\newcommand{\clet}[3]{\klet \ \var{#2} \  \kbe \ #1  \ \kin \  #3}
+\newcommand{\cleta}[2]{\klet \ \var{#2} \  \kbe \ #1}
+\newcommand{\cletb}[1]{\kin \  #1}
+
+
+
+\newcommand{\grulename}[1]{\textsc{#1}}
+\newcommand{\tyrule}[3]{\inferrule*[Left=#1]{#2}{#3}}
+\newcommand{\tyrulename}[2]{#1-ty-#2}
+\newcommand{\etyrulename}[1]{\tyrulename{\lggeE}{{#1}}}
+\newcommand{\eftyrulename}[1]{\tyrulename{\lggeEF}{{#1}}}
+\newcommand{\ttyrulename}[1]{\tyrulename{\lggeT}{{#1}}}
+\newcommand{\ftyrulename}[1]{\tyrulename{\lggeF}{{#1}}}
+\newcommand{\ltyrulename}[1]{\tyrulename{\lggeL}{{#1}}}
+
+
+\newcommand{\tyjudge}[3]{#1 \vdash #2 : #3}
+
+
+\newcommand{\valjudge}[1]{#1 \ \mathsf{{\color{ggreen} val}}}
+\newcommand{\errjudge}[1]{#1 \ \mathsf{{\color{rred} err}}}
+
+
+\newcommand{\semrule}[3]{\inferrule*[Left=#1]{#2}{#3}}
+\newcommand{\semrulename}[2]{#1-se-#2}
+\newcommand{\esemrulename}[1]{\semrulename{\lggeE}{{#1}}}
+\newcommand{\efsemrulename}[1]{\semrulename{\lggeEF}{{#1}}}
+\newcommand{\tsemrulename}[1]{\semrulename{\lggeT}{{#1}}}
+\newcommand{\wsemrulename}[1]{\semrulename{\lggeW}{{#1}}}
+\newcommand{\fsemrulename}[1]{\semrulename{\lggeF}{{#1}}}
+\newcommand{\lsemrulename}[1]{\semrulename{\lggeL}{{#1}}}
+
+\newcommand{\trans}{\longmapsto}
+\newcommand{\transC}{\longmapsto^{\ast}}
+\newcommand{\jtrans}[2]{#1 \trans #2}
+\newcommand{\jtransC}[2]{#1 \transC #2}
+
+
+
+\newcommand{\anorule}[2]{\inferrule*{#1}{#2}}
+
+%%%%%% LANGUAGE EF %%%%%%%%%%%%%%
+
+\newcommand{\tyarr}[2]{\kw{arr}{(#1; #2)}}
+\newcommand{\ctyarr}[2]{#1 \rightarrow #2}
+\newcommand{\elam}[3]{\kw{lam}{\{#1\}}{(\var{#2}. \ #3)}}
+\newcommand{\clam}[3]{\lambda(\var{#2}:#1) . \ (#3)}
+\newcommand{\eapp}[2]{\kw{ap}(#1; #2)}
+\newcommand{\capp}[2]{(#1) \ (#2)}
+
+
+%%%%%% LANGUAGE T %%%%%%%%%%%%%%
+
+\newcommand{\tynat}{\kw{nat}}
+\newcommand{\ez}{\kw{z}}
+\newcommand{\esucc}[1]{\kw{s}(#1)}
+\newcommand{\erec}[5]{\kw{rec}\{#1; \var{#2} . \var{#3} . #4\} (#5)}
+\newcommand{\crec}[5]{\kw{rec} \ #5 \ \{ \ez \hookrightarrow  #1
+  \ | \
+  \esucc{\var{#2}} \ \kw{with} \ \var{#3} \hookrightarrow #4 \}}
+
+
+\newcommand{\eiter}[4]{\kw{iter}\{ #1; \var{#2} . #3 \} (#4)}
+\newcommand{\citer}[4]{\kw{iter} \ #4 \ \{ \ez \hookrightarrow  #1
+  \ | \
+  {\var{#2}} \hookrightarrow #3 \}}
+
+
+%%%%%%%%%%%%%%%% DATA TYPES
+
+\newcommand{\tyunit}{\kw{unit}}
+\newcommand{\typrod}[2]{\kw{prod}(#1;#2)}
+\newcommand{\etriv}{\kw{triv}}
+\newcommand{\ctriv}{\langle \rangle}
+\newcommand{\epair}[2]{\binop{pair}{#1}{#2}}
+\newcommand{\cpair}[2]{\langle #1, #2 \rangle}
+\newcommand{\eprl}[1]{\kw{pl}(#1)}
+\newcommand{\eprr}[1]{\kw{pr}(#1)}
+\newcommand{\cprl}[1]{#1 \cdot \kw{l}}
+\newcommand{\cprr}[1]{#1 \cdot \kw{r}}
+
+
+
+\newcommand{\tyvoid}{\kw{void}}
+\newcommand{\tysum}[2]{\kw{sum}(#1;#2)}
+\newcommand{\eabort}[2]{\kw{abort}\{#1\}(#2)}
+\newcommand{\cabort}[1]{\kw{abort}(#1)}
+\newcommand{\einl}[3]{\kw{inl}\{#1;#2\}(#3)}
+\newcommand{\einr}[3]{\kw{inr}\{#1;#2\}(#3)}
+\newcommand{\cinl}[1]{\kw{l} \cdot #1}
+\newcommand{\cinr}[1]{\kw{r} \cdot #1}
+\newcommand{\ecase}[5]{\kw{case}(#1; \var{#2} . \ #3 ; \var{#4} . \ #5)}
+\newcommand{\ccase}[5]{\kw{case}\ #1 \ \{\kw{l} \cdot \var{#2}  \hookrightarrow #3 \ | \ 
+  \kw{r} \cdot \var{#4} \hookrightarrow #5\}}
+
+
+%%%%%%%%%%%%%%%%%% T LANGUAGE
+\newcommand{\bnum}[1]{\overline{#1}}
+
+
+%%%%%%%%%%%%%%%%%% F LANGUAGE
+\newcommand{\tyall}[2]{\kw{all}{(\tvar{#1} . #2)}}
+\newcommand{\ctyall}[2]{\forall(\tvar{#1} . #2)}
+
+\newcommand{\eLAM}[2]{\kw{Lam}(\tvar{#1}.#2)}
+\newcommand{\cLAM}[2]{\Lambda (\tvar{#1}) . #2}
+\newcommand{\eAPP}[2]{\kw{Ap}\{#1\}(#2)}
+\newcommand{\cAPP}[2]{#2 \lceil #1 \rceil}
+
+
+\newcommand{\typeok}{\mathsf{{\color{ggreen} type}}}
+\newcommand{\typejudge}[2]{#1 \vdash #2 \ \typeok}
+
+\DeclareMathOperator{\ctxtsep}{;}
+
+\newcommand{\tyFjudge}[4]{#1 \ctxtsep #2 \vdash #3 : #4}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% L LANGUAGE
+
+\newcommand{\ellam}[4]{\kw{llam}_{#4}{\{#1\}}{(\var{#2}.#3)}}
+\newcommand{\cllam}[4]{\lambda_{#4} (\var{#2}:#1) . #3}
+\newcommand{\elpair}[3]{\kw{pair}_{#3}({#1; #2)}}
+\newcommand{\clpair}[3]{#3 \ \langle #1, #2 \rangle}
+
+\newcommand{\esplit}[4]{\kw{let}(#1; (\var{#2}, \var{#3}) . #4)}
+
+\newcommand{\ksplit}{\kw{let}}
+\newcommand{\kas}{\kw{as}}
+\newcommand{\csplit}[4]{\ksplit \  \var{#2}, \var{#3} \ \kbe \ #1 \  \kin \  #4}
+
+\newcommand{\unq}{{\color{ggreen}\mathsf{un}}}
+\newcommand{\linq}{{\color{rred}\mathsf{lin}}}
+\newcommand{\ptype}[2]{#1 \ #2}
+
+
+\DeclareMathOperator{\ctxtsplit}{\circ}
+
+
+\newcommand{\unres}[1]{\unq(#1)}
+\newcommand{\linear}[1]{\linq(#1)}
+
+
+%%%%%%%%%%% WHILE LANGUAGE
+
+\newcommand{\eleq}[2]{\binop{leq}{#1}{#2}}
+
+\newcommand{\sskip}{\kw{skip}}
+\newcommand{\csseq}[2]{#1; #2}
+\newcommand{\sseq}[2]{\binop{seq}{#1}{#2}}
+\newcommand{\site}[3]{\kw{if}(#1; #2 ;#3)}
+\newcommand{\csite}[3]{\kw{if}\ #1 \ \kw{then} \ #2 \ \kw{else} \ #3}
+\newcommand{\swhile}[2]{\binop{while}{#1}{#2}}
+\newcommand{\cwhile}[2]{\kw{while} \ #1 \ \kw{do} \ #2}
+
+\newcommand{\sset}[2]{\kw{set}(\var{#1};#2)}
+\newcommand{\cset}[2]{\var{#1} \leftarrow #2}
+
+
+\newcommand{\upmap}[3]{#1[\var{#2} \mapsto #3]}
+
+\newcommand{\wtyrulename}[1]{\tyrulename{\lggeW}{{#1}}}
+\newcommand{\wconf}[2]{\langle #1, #2 \rangle}
+
+
+\newcommand{\wejudge}[3]{#1 \vdash #2 : #3}
+\newcommand{\wsjudge}[2]{#1 \vdash #2 \ {\color{ggreen} \mathsf{ok}}}
+
+
+\newcommand{\bsjudge}[2]{#1 \Downarrow #2}
+
+
+%%%%%%%%%%%%% UNTYPED LAMBDA
+
+\newcommand{\eulam}[2]{\kw{lam}{(\var{#1}.#2)}}
+\newcommand{\culam}[2]{\lambda \var{#1} . #2}
+
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
