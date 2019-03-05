@@ -250,23 +250,23 @@ re-constructed).
 % 
 \[
 \semrule
-{\esemrulename{catval}}
+{\esemrulename{eqt}}
 {n_1 == n_2}
 {\jtrans{\eequal{\enum{n_1}}{\enum{n_2}}}{\ktrue}}
 \qquad \qquad  \qquad
 \semrule
-{\esemrulename{catval}}
+{\esemrulename{eqf}}
 {n_1 /= n_2}
 {\jtrans{\eequal{\enum{n_1}}{\enum{n_2}}}{\kfalse}}
 \]
 \[
 \semrule
-{\esemrulename{catl}}
+{\esemrulename{eql}}
 { \jtrans{e_1}{e'_1}}
 {\jtrans{\eequal{e_1}{e_2}}{\eequal{e'_1}{e_2}}}
 \qquad \qquad  \qquad
 \semrule
-{\esemrulename{catr}}
+{\esemrulename{eqr}}
 {\valjudge{e_1}
   \and
   \jtrans{e_2}{e'_2}}
