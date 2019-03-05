@@ -14,9 +14,38 @@
 
 \DeclareMathOperator{\defi}{\triangleq}
 
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
+
+% \mode<handout>{\newcommand\handoutmcd[1]{\begin{comment} #1 \end{comment} }}
+
+\newcommand{\separator}[1]{
+  \begin{frame}
+    \begin{center}
+    \Huge{#1}
+  \end{center}
+\end{frame}
+}
+
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
 \DeclareMathOperator{\concat}{\text{\texttt{++}}}
 
 \newcommand{\menquote}[1]{{\text{``} #1 \text{''}}} 
+
+\DeclareMathOperator{\meq}{=}
 
 
 \newcommand{\kw}[1]{\mathtt{#1}} 
@@ -61,7 +90,6 @@
 
 \newcommand{\litstr}[1]{\menquote{#1}}
 
-%%%% LANGUAGE E
 \newcommand{\enum}[1]{\kw{num}\ifthenelse{\equal{#1}{}}{}{[#1]}}
 \newcommand{\estr}[1]{\kw{str}\ifthenelse{\equal{#1}{}}{}{[#1]}}
 \newcommand{\ebool}[1]{\kw{bool}\ifthenelse{\equal{#1}{}}{}{[#1]}}
@@ -71,6 +99,7 @@
 
 
 \newcommand{\eplus}[2]{\binop{plus}{#1}{#2}}
+\newcommand{\eequal}[2]{\binop{equal}{#1}{#2}}
 \newcommand{\etimes}[2]{\binop{times}{#1}{#2}}
 \newcommand{\ecat}[2]{\binop{cat}{#1}{#2}}
 \newcommand{\elen}[1]{\unop{len}{#1}}
@@ -197,6 +226,7 @@
 
 \DeclareMathOperator{\ctxtsep}{;}
 
+
 \newcommand{\tyFjudge}[4]{#1 \ctxtsep #2 \vdash #3 : #4}
 
 
@@ -258,9 +288,6 @@
 
 \newcommand{\eulam}[2]{\kw{lam}{(\var{#1}.#2)}}
 \newcommand{\culam}[2]{\lambda \var{#1} . #2}
-
-
-
 
 
 %%% Local Variables:

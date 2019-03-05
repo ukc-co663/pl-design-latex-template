@@ -1,0 +1,336 @@
+\documentclass[11pt]{article}
+\usepackage[top=2cm,bottom=2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+% 
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ifthen}
+\usepackage{mathpartir}
+\usepackage{mathtools}
+\input{macros}
+% 
+\begin{document}
+
+\title{CO663: Language $\lggeE$ ---  summary}
+
+\date{\vspace{-7ex}}
+\maketitle
+
+% \pagenumbering{gobble}
+
+\newcommand{\lazyeval}[1]{\framebox{\parbox[c][#1]{\textwidth}{
+      \color{white}{h}% 
+    }}}
+
+
+\section{Syntax}
+
+\[
+\begin{array}{llclll} 
+  & & & \text{abstract syntax} & \text{concrete syntax}
+  \\\hline
+  \TYPES & \tau & \Coloneqq & \enum{}  & \enum{} & \text{numbers}
+  \\
+  &&& \estr{} & \estr{} & \text{strings}
+  \\
+  &&& \ebool{} & \ebool{} & \text{Booleans}
+  \\ 
+  % 
+  \EXPS & e & \Coloneqq  & \var{x} & \var{x} & \text{variable}
+  \\
+  &&& \enum{n} & n & \text{numeral}
+  \\
+  &&& \estr{s} & \litstr{s} & \text{literal}
+  \\
+  &&&  \ktrue & \ktrue 
+  \\ 
+  &&&  \kfalse & \kfalse 
+  \\
+  &&& \eplus{e_1}{e_2} & e_1 {+} e_2 & \text{addition}
+  \\
+  &&& \etimes{e_1}{e_2} & e_1 {*} e_2 & \text{multiplication}
+  \\
+  &&& \ecat{e_1}{e_2} & e_1 \concat e_2 & \text{concatenate}
+  \\
+  &&& \elen{e} & \lvert e \rvert & \text{length}
+  \\
+  &&& \eequal{e_1}{e_2} & e_1 \meq e_2 & \text{number equality}
+  \\
+  &&& \site{e}{e_1}{e_2} & \csite{e}{e_1}{e_2} & \text{if then else}
+  \\
+  &&& \elet{e_1}{x}{e_2} & \clet{e_1}{x}{e_2} & \text{definition}
+\end{array}
+\]
+
+\section{Typing rules / Statics}
+
+\[
+\tyrule
+{\etyrulename{var}}
+{\,}
+{\tyjudge{\Gamma_1, \var{x}: \tau, \Gamma_2}{\var{x}}{\tau} }
+\qquad
+\qquad
+\tyrule
+{\etyrulename{let}}
+{
+  \tyjudge{\Gamma}{e_1}{\tau_1}
+  \and
+  \tyjudge{\Gamma, \var{x} : \tau_1 }{e_2}{\tau}
+}
+{\tyjudge{\Gamma}{\elet{e_1}{x}{e_2}}{\tau}}
+\]
+\[
+\tyrule
+{\etyrulename{str}}
+{\,}
+{\tyjudge{\Gamma}{\estr{s}}{\estr{}}}
+\qquad\qquad\qquad
+\tyrule
+{\etyrulename{num}}
+{\,}
+{\tyjudge{\Gamma}{\enum{n}}{\enum{}}}
+\]
+\[
+\tyrule
+{\etyrulename{tt}}
+{\,}
+{\tyjudge{\Gamma}{\ktrue}{\ebool{}}}
+\qquad\qquad\qquad
+\tyrule
+{\etyrulename{ff}}
+{\,}
+{\tyjudge{\Gamma}{\kfalse}{\ebool{}}}
+\]
+\[
+\tyrule
+{\etyrulename{plus}}
+{
+  \tyjudge{\Gamma}{e_1}{\enum{}}
+  \and
+  \tyjudge{\Gamma}{e_2}{\enum{}}
+}
+{\tyjudge{\Gamma}{\eplus{e_1}{e_2}}{\enum{}}}
+\qquad\qquad\qquad
+\tyrule
+{\etyrulename{times}}
+{
+  \tyjudge{\Gamma}{e_1}{\enum{}}
+  \and
+  \tyjudge{\Gamma}{e_2}{\enum{}}
+}
+{\tyjudge{\Gamma}{\etimes{e_1}{e_2}}{\enum{}}}
+% 
+\]
+\[
+\tyrule
+{\etyrulename{cat}}
+{
+  \tyjudge{\Gamma}{e_1}{\estr{}}
+  \and
+  \tyjudge{\Gamma}{e_2}{\estr{}}
+}
+{\tyjudge{\Gamma}{\ecat{e_1}{e_2}}{\estr{}}}
+\qquad\qquad\qquad
+\tyrule
+{\etyrulename{len}}
+{
+  \tyjudge{\Gamma}{e}{\estr{}}
+}
+{\tyjudge{\Gamma}{\elen{e}}{\enum{}}}
+\]
+\[
+\tyrule
+{\etyrulename{eq}}
+{
+  \tyjudge{\Gamma}{e_1}{\enum{}}
+  \and
+  \tyjudge{\Gamma}{e_2}{\enum{}}
+}
+{\tyjudge{\Gamma}{\eequal{e_1}{e_2}}{\ebool{}}}
+\qquad\qquad\qquad
+\tyrule
+{\etyrulename{ite}}
+{
+  \tyjudge{\Gamma}{e}{\ebool{}}
+  \and
+  \tyjudge{\Gamma}{e_1}{\tau}
+  \and
+  \tyjudge{\Gamma}{e_2}{\tau}
+}
+{\tyjudge{\Gamma}{\site{e}{e_1}{e_2}}{\tau}}
+\]
+
+\section{Semantics / Dynamics}
+
+\subsection{Value judgements}
+\[
+\semrule{}
+{\,}
+{\valjudge{\enum{n}}}
+\qquad \qquad  \qquad
+\semrule{}
+{\,}
+{\valjudge{\estr{s}}}
+\qquad \qquad  \qquad
+\semrule{}
+{\,}
+{\valjudge{\ktrue}}
+\qquad \qquad  \qquad
+\semrule{}
+{\,}
+{\valjudge{\kfalse}}
+\]
+
+\subsection{Reduction judgements}
+
+The main semantic rules are as follows (the missing ones can easily be
+re-constructed).
+\[
+\semrule
+{\esemrulename{plval}}
+{n_1 + n_2 = n}
+{\jtrans{\eplus{\enum{n_1}}{\enum{n_2}}}{\enum{n}}}
+\qquad \qquad  \qquad
+\semrule
+{\esemrulename{pll}}
+{\jtrans{e_1}{e'_1}}
+{\jtrans{\eplus{e_1}{e_2}}{\eplus{e'_1}{e_2}}}
+\]
+\[
+\semrule
+{\esemrulename{plr}}
+{ \valjudge{e_1}
+  \and
+  \jtrans{e_2}{e'_2}}
+{\jtrans{\eplus{e_1}{e_2}}{\eplus{e_1}{e'_2}}}
+\]
+\[
+\semrule
+{\esemrulename{tmval}}
+{n_1 \times n_2 = n}
+{\jtrans{\etimes{\enum{n_1}}{\enum{n_2}}}{\enum{n}}}
+\qquad \qquad  \qquad
+\semrule
+{\esemrulename{tml}}
+{\jtrans{e_1}{e'_1}}
+{\jtrans{\etimes{e_1}{e_2}}{\etimes{e'_1}{e_2}}}
+\]
+\[
+\semrule
+{\esemrulename{tmr}}
+{ \valjudge{e_1}
+  \and
+  \jtrans{e_2}{e'_2}}
+{\jtrans{\etimes{e_1}{e_2}}{\etimes{e_1}{e'_2}}}
+\]
+\[
+\semrule
+{\esemrulename{catval}}
+{s_1 \concat s_2 = s}
+{\jtrans{\ecat{\estr{s_1}}{\estr{s_2}}}{\estr{s}}}
+\qquad \qquad  \qquad
+\semrule
+{\esemrulename{catl}}
+{ \jtrans{e_1}{e'_1}}
+{\jtrans{\ecat{e_1}{e_2}}{\ecat{e'_1}{e_2}}}
+\]
+\[
+\semrule
+{\esemrulename{catr}}
+{\valjudge{e_1}
+  \and
+  \jtrans{e_2}{e'_2}}
+{\jtrans{\ecat{e_1}{e_2}}{\ecat{e_1}{e'_2}}}
+\]
+% 
+\[
+\semrule
+{\esemrulename{catval}}
+{n_1 == n_2}
+{\jtrans{\eequal{\enum{n_1}}{\enum{n_2}}}{\ktrue}}
+\qquad \qquad  \qquad
+\semrule
+{\esemrulename{catval}}
+{n_1 /= n_2}
+{\jtrans{\eequal{\enum{n_1}}{\enum{n_2}}}{\kfalse}}
+\]
+\[
+\semrule
+{\esemrulename{catl}}
+{ \jtrans{e_1}{e'_1}}
+{\jtrans{\eequal{e_1}{e_2}}{\eequal{e'_1}{e_2}}}
+\qquad \qquad  \qquad
+\semrule
+{\esemrulename{catr}}
+{\valjudge{e_1}
+  \and
+  \jtrans{e_2}{e'_2}}
+{\jtrans{\eequal{e_1}{e_2}}{\eequal{e_1}{e'_2}}}
+\]
+
+\[
+\semrule
+{\esemrulename{itet}}
+{\,}
+{\jtrans{\site{\ktrue}{e_1}{e_2}}{e_1}}
+\qquad \qquad  \qquad
+\semrule
+{\esemrulename{itef}}
+{\,}
+{\jtrans{\site{\kfalse}{e_1}{e_2}}{e_2}}
+\]
+\[
+\semrule
+{\esemrulename{ite}}
+{\jtrans{e}{e'}}
+{\jtrans{\site{e}{e_1}{e_2}}{\site{e'}{e_1}{e_2}}}
+\]
+
+
+
+
+To reduce \texttt{let} constructs, we can use either:
+\begin{itemize}
+\item Call-by-name (``lazy''):
+  \[
+  \semrule
+  {\esemrulename{letn}}
+  {\,}
+  {
+    \jtrans{\elet{e_1}{x}{e_2}}{\subs{e_2}{e_1}{x}}}
+  \]
+\item Call-by-value (``strict''):
+  {\color{gray}
+    \[
+    \semrule
+    {\esemrulename{letm}}
+    {\jtrans{e_1}{e'_1}}
+    {
+      \jtrans{\elet{e_1}{x}{e_2}}{\elet{e'_1}{x}{e_2}}}
+    \qquad \qquad  \qquad
+    \semrule
+    {\esemrulename{letv}}
+    {\valjudge{e_1}}
+    {
+      \jtrans{\elet{e_1}{x}{e_2}}{\subs{e_2}{e_1}{x}}}
+    \]
+  }
+\end{itemize}
+
+
+\section*{\LaTeX\ template}
+The \LaTeX\ sources of this document are available in:
+\url{https://github.com/ukc-co663/pl-design-latex-template}.
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
