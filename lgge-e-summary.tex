@@ -272,7 +272,17 @@ re-constructed).
   \jtrans{e_2}{e'_2}}
 {\jtrans{\eequal{e_1}{e_2}}{\eequal{e_1}{e'_2}}}
 \]
-
+% 
+\[
+\semrule{\esemrulename{lenv}}
+{\lvert s \rvert == n}
+{\jtrans{\elen{\estr{s}}}{\enum{n}}}
+\qquad \qquad  \qquad
+\semrule{\esemrulename{lene}}
+{\jtrans{e}{e'}}
+{\jtrans{\elen{e}}{\elen{e'}}}
+\]
+% 
 \[
 \semrule
 {\esemrulename{itet}}
