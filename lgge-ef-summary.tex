@@ -216,6 +216,12 @@
 {\valjudge{\kfalse}}
 \]
 
+\[
+\semrule
+{\efsemrulename{lam}}
+{\,}
+{\valjudge{\elam{\tau}{x}{e}}}
+\]
 \subsection{Reductions}
 
 The main semantic rules are as follows (the missing ones can easily be
@@ -360,15 +366,11 @@ To reduce \texttt{let} constructs, we can use either:
       \jtrans{\elet{e_1}{x}{e_2}}{\subs{e_2}{e_1}{x}}}
     \]
   }
-
-
-  
+  % 
+  %
+  % 
   \[
-  \semrule
-  {\efsemrulename{lam}}
-  {\,}
-  {\valjudge{\elam{\tau}{x}{e}}}
-  \qquad \qquad  \qquad
+  % \qquad \qquad  \qquad
   % 
   \semrule
   {\efsemrulename{ap}}
